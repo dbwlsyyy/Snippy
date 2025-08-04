@@ -10,12 +10,3 @@
     display: flex;
     flex-grow: 1;
 }
-
-.footer {
-    background-color: var(--color-main);
-    color: rgba(255, 255, 255, 0.7);
-    padding: 0.8rem 1rem;
-    text-align: center;
-    font-size: 0.8rem;
-    flex-shrink: 0;
-}

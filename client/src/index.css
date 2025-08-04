@@ -16,6 +16,15 @@
     -moz-osx-font-smoothing: grayscale;
 }
 
+#root {
+    min-width: 70rem;
+    overflow-x: auto;
+}
+
+html {
+    font-size: 62.5%;
+}
+
 body {
     margin: 0;
     background-color: var(--color-background);
@@ -33,15 +42,15 @@ a:hover {
 }
 
 h1 {
-    font-size: 3.2em;
+    font-size: 5.1em;
     line-height: 1.1;
 }
 
 button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
+    border-radius: 0.8rem;
+    border: 0.1rem solid transparent;
+    padding: 1rem 2em;
+    font-size: 1.6rem;
     font-weight: 500;
     font-family: inherit;
     background-color: #1a1a1a;
