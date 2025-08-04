@@ -12,3 +12,13 @@
     margin: 0;
     font-size: 3rem;
 }
+
+.headerRight {
+    display: flex;
+    gap: 1.6rem;
+    align-items: center;
+}
+
+.headerRight svg {
+    cursor: pointer;
+}

@@ -5,7 +5,7 @@ export default function Home() {
     return (
         <main className={styles.mainSection}>
             <h2 className={styles.welcomeHeading}>
-                🚀 Welcome to Your Dev Notebook!
+                🚀 Welcome to Your Dev Note, Snippy!
             </h2>
             <p className={styles.welcomeText}>
                 이곳에 당신만의 소중한 개발 노하우와 코드 스니펫들이 멋지게
