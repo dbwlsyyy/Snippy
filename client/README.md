@@ -33,3 +33,20 @@
 -   백업 및 복원 기능
 -   고급 텍스트 에디터 연동 (WYSIWYG 에디터 등)
 -   데스크톱 앱 빌드 (Electron 등)
+
+<!-- ## 🚀 시작하는 방법
+
+1.  저장소 클론:
+    ```bash
+    git clone [저장소_URL_여기에_입력]
+    cd your-dev-notebook
+    ```
+2.  의존성 설치:
+    ```bash
+    npm install
+    ```
+3.  개발 서버 실행:
+    ```bash
+    npm run dev
+    ```
+    브라우저에서 안내된 로컬 주소로 접속하면 앱이 실행됩니다. -->
