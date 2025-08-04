@@ -1,69 +1,35 @@
-# React + TypeScript + Vite
+# ✍️ 나만의 개발자 노트 & 코드 스니펫 관리 앱 (My Snippet)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 🌟 프로젝트 소개
 
-Currently, two official plugins are available:
+개발 학습 중 만나는 유용한 지식과 코드 스니펫들을 체계적으로 기록하고 관리하기 위한 개인 웹 애플리케이션입니다. 기존 노트 서비스의 한계를 넘어, **자유로운 코드 기록과 개념 관련 코드 검색** 기능을 통해 개발자 개인의 지식 창고를 효율적으로 구축할 수 있습니다.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+본 앱은 백엔드 없이 사용자 브라우저에 데이터를 저장하며, 저의 React와 TypeScript 학습 경험을 직접 적용하는 사이드 프로젝트로 진행됩니다.
 
-## Expanding the ESLint configuration
+## ✨ 주요 기능
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+-   **노트/스니펫 생성 및 편집**: 개발 관련 지식, 아이디어, 유용한 코드 조각들을 기록하고 수정합니다.
+-   **태그 및 검색**: 내용 분류를 위한 태그를 부여하고, 제목/내용/태그로 원하는 노트를 빠르게 찾습니다.
+-   **마크다운 지원**: 마크다운 문법으로 노트를 작성하고 깔끔하게 렌더링하여 가독성을 높입니다.
+-   **로컬 데이터 저장**: 모든 데이터는 사용자의 웹 브라우저 IndexedDB에 저장됩니다.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 🛠️ 기술 스택 (Tools & Technologies)
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+-   **Frontend:** React
+-   **Language:** TypeScript
+-   **Local DB:** IndexedDB (via Dexie.js)
+-   **Styling:** CSS Modules
+-   **Others:** marked.js (마크다운 렌더링)
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🏗️ 아키텍처 (Architecture)
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+본 앱은 사용자 웹 브라우저 내에서 모든 기능이 동작하는 **클라이언트 사이드 SPA(Single Page Application)** 구조입니다. 모든 데이터는 브라우저의 IndexedDB에 로컬로 저장되어, 별도 서버 없이도 구동됩니다.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 🛣️ 향후 개발 로드맵 (추가 중)
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+-   사용자 인증 및 클라우드 동기화 (Node.js/Next.js + Firebase/Supabase 등 연동)
+-   카테고리/태그 편집 및 관리 기능 강화
+-   이미지/파일 첨부 기능
+-   백업 및 복원 기능
+-   고급 텍스트 에디터 연동 (WYSIWYG 에디터 등)
+-   데스크톱 앱 빌드 (Electron 등)
