@@ -18,7 +18,17 @@ export default function SideBar() {
                 </li>
                 <li className={styles.sidebarNavItem}>
                     <a href="#" className={styles.sidebarNavLink}>
+                        ⭐️ 즐겨찾기
+                    </a>
+                </li>
+                <li className={styles.sidebarNavItem}>
+                    <a href="#" className={styles.sidebarNavLink}>
                         🏷️ 태그 관리
+                    </a>
+                </li>
+                <li className={styles.sidebarNavItem}>
+                    <a href="#" className={styles.sidebarNavLink}>
+                        ⚙️ 세팅
                     </a>
                 </li>
             </ul>
