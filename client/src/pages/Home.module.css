@@ -1,0 +1,32 @@
+.mainSection {
+    flex-grow: 1;
+    padding: 2rem;
+    background-color: var(--color-background);
+}
+
+.welcomeHeading {
+    margin-top: 0;
+    color: var(--color-highlight-btn);
+}
+
+.welcomeText {
+    line-height: 1.6;
+}
+
+.exampleCard {
+    background-color: var(--color-card-bg);
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 2rem;
+}
+
+.cardTitle {
+    color: var(--color-highlight-btn);
+    margin: 0 0 0.8rem 0;
+}
+
+.cardContent {
+    margin: 0;
+    font-size: 0.95rem;
+}
