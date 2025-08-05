@@ -1,41 +1,58 @@
+import { useNavigate } from 'react-router-dom';
 import styles from './SideBar.module.css';
 
 export default function SideBar() {
-    const handleClick = () => {
-        //
-    };
+    const navigate = useNavigate();
 
     return (
         <nav className={styles.sidebar}>
             <ul className={styles.sidebarNavList}>
                 <li className={styles.sidebarNavItem}>
-                    <a href="#" className={styles.sidebarNavLink}>
+                    <span
+                        className={styles.sidebarNavLink}
+                        onClick={() => navigate('/notes')}
+                    >
                         📚 내 노트
-                    </a>
+                    </span>
                 </li>
                 <li className={styles.sidebarNavItem}>
-                    <a href="#" className={styles.sidebarNavLink}>
+                    <span
+                        className={styles.sidebarNavLink}
+                        onClick={() => navigate('/snippets')}
+                    >
                         💻 내 스니펫
-                    </a>
+                    </span>
                 </li>
                 <li className={styles.sidebarNavItem}>
-                    <a href="#" className={styles.sidebarNavLink}>
+                    <span
+                        className={styles.sidebarNavLink}
+                        onClick={() => navigate('/likes')}
+                    >
                         ⭐️ 즐겨찾기
-                    </a>
+                    </span>
                 </li>
                 <li className={styles.sidebarNavItem}>
-                    <a href="#" className={styles.sidebarNavLink}>
+                    <span
+                        className={styles.sidebarNavLink}
+                        onClick={() => navigate('/tags')}
+                    >
                         🏷️ 태그 관리
-                    </a>
+                    </span>
                 </li>
                 <li className={styles.sidebarNavItem}>
-                    <a href="#" className={styles.sidebarNavLink}>
+                    <span
+                        className={styles.sidebarNavLink}
+                        onClick={() => navigate('/settings')}
+                    >
                         ⚙️ 세팅
-                    </a>
+                    </span>
                 </li>
             </ul>
-            <button className={styles.sidebarButton} onClick={handleClick}>
-                ➕ 새 노트/스니펫 작성
+            <button
+                className={styles.btnNewNote}
+                onClick={() => navigate('/new')}
+            >
+                ➕ 새 노트 / 스니펫 작성
             </button>
         </nav>
     );
