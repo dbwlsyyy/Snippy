@@ -1,6 +1,10 @@
 import styles from './SideBar.module.css';
 
 export default function SideBar() {
+    const handleClick = () => {
+        //
+    };
+
     return (
         <nav className={styles.sidebar}>
             <ul className={styles.sidebarNavList}>
@@ -30,10 +34,7 @@ export default function SideBar() {
                     </a>
                 </li>
             </ul>
-            <button
-                className={styles.sidebarButton}
-                onClick={() => alert('새 노트를 작성해 보세요!')}
-            >
+            <button className={styles.sidebarButton} onClick={handleClick}>
                 ➕ 새 노트/스니펫 작성
             </button>
         </nav>

@@ -2,6 +2,7 @@ import styles from './App.module.css';
 import Header from './components/Header';
 import SideBar from './components/SideBar';
 import Home from './pages/Home';
+import NewNote from './pages/NewNote';
 
 function App() {
     return (
@@ -10,7 +11,10 @@ function App() {
 
             <div className={styles.mainContentArea}>
                 <SideBar />
-                <Home />
+                <main className={styles.mainSection}>
+                    {/* <Home /> */}
+                    <NewNote />
+                </main>
             </div>
         </div>
     );

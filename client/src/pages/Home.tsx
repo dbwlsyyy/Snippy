@@ -3,7 +3,7 @@ import styles from './Home.module.css';
 
 export default function Home() {
     return (
-        <main className={styles.mainSection}>
+        <div className={styles.mainContainer}>
             <h2 className={styles.welcomeHeading}>
                 🚀 Welcome to Your Dev Note, Snippy!
             </h2>
@@ -22,6 +22,6 @@ export default function Home() {
                     깔끔하게 정리할 수 있습니다.
                 </p>
             </div>
-        </main>
+        </div>
     );
 }
