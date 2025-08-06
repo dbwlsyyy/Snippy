@@ -14,15 +14,30 @@ export default function NewNote() {
     const handleMode = () => {
         setMode(isNoteMode ? 'snippet' : 'note');
     };
+    const handleSave = () => {};
+    const handleDelete = () => {};
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.headerNumber}>
                     <h2># 1</h2>
-                    <button onClick={handleMode} className={styles.btnMode}>
-                        {isNoteMode ? '스니펫 모드로 전환' : '노트 모드로 전환'}
-                    </button>
+                    <div className={styles.headerbtn}>
+                        <button onClick={handleSave} className={styles.btnSave}>
+                            저장
+                        </button>
+                        <button
+                            onClick={handleDelete}
+                            className={styles.btnDelete}
+                        >
+                            삭제
+                        </button>
+                        <button onClick={handleMode} className={styles.btnMode}>
+                            {isNoteMode
+                                ? '스니펫 모드로 전환'
+                                : '노트 모드로 전환'}
+                        </button>
+                    </div>
                 </div>
 
                 <textarea
@@ -31,6 +46,7 @@ export default function NewNote() {
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="제목을 입력해주세요."
                     maxLength={50}
+                    rows={1}
                 />
 
                 <div className={styles.headerDescription}>
