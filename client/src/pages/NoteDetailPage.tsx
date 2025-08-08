@@ -15,6 +15,7 @@ function NoteDetailPage() {
     //노트 타입 검사? 유효성 검사 어떻게 하지? 근데 디테일페이지로 이동한거면 무조건 note 타입이 Note 일텐데 undefinded가 나올리가 앖잖아 그걸 얘한테 어떻게 알려줘야하지
     const note = useLiveQuery(() => db.notes.get(noteId));
     const html = marked.parse(note ? note.content : '');
+    console.log(html);
     const handleUpdate = () => {};
 
     const handleDelete = async () => {
@@ -44,7 +45,10 @@ function NoteDetailPage() {
                 </div>
             </div>
 
-            <div dangerouslySetInnerHTML={{ __html: html }} />
+            <div
+                className={styles.content}
+                dangerouslySetInnerHTML={{ __html: html }}
+            />
         </div>
     );
 }
