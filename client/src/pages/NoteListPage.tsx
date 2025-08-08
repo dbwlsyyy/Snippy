@@ -2,6 +2,7 @@ import React from 'react';
 import { useLiveQuery } from 'dexie-react-hooks'; // ✨ 실시간 쿼리를 위한 훅!
 import { db } from '../api/db'; // Dexie.js DB 인스턴스
 import styles from './NoteListPage.module.css';
+import { Link } from 'react-router-dom';
 
 function NoteListPage() {
     const notes =
@@ -21,9 +22,12 @@ function NoteListPage() {
                 <ul className={styles.noteList}>
                     {notes.map((note) => (
                         <li key={note.id} className={styles.noteListItem}>
-                            <a href="#" className={styles.noteTitle}>
+                            <Link
+                                to={`/notes/${note.id}`}
+                                className={styles.noteTitle}
+                            >
                                 {note.title}
-                            </a>
+                            </Link>
                             <p className={styles.contentPreview}>
                                 {note.content.substring(0, 200)}
                                 {note.content.length > 200 ? '...' : ''}
