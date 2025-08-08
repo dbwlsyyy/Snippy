@@ -26,7 +26,11 @@ export default function NewNote() {
         const timestamp = Date.now();
         const noteFields = {
             title: title.trim(),
-            tags: tags.map((tag) => tag.trim()).filter((tag) => tag !== ''),
+            tags: [
+                ...new Set(
+                    tags.map((tag) => tag.trim()).filter((tag) => tag !== '')
+                ),
+            ],
             createdAt: timestamp,
             updatedAt: timestamp,
         };
