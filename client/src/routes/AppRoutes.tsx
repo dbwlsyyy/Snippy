@@ -13,6 +13,8 @@ export default function AppRoutes() {
             <Route path="/notes" element={<NoteListPage />} />
             {/* <Route path="/snippets" element={<SnippetListPage />} /> */}
             <Route path="/notes/:id" element={<NoteDetailPage />} />
+            <Route path="/notes/edit/:id" element={<NewNote />} />
+
             {/* <Route path="*" element={<NotFoundPage />} /> */}
         </Routes>
     );

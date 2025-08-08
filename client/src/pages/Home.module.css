@@ -1,3 +1,7 @@
+.mainContainer {
+    padding: 2rem;
+}
+
 .welcomeHeading {
     font-size: 3.5rem;
     line-height: 1.2;
@@ -26,6 +30,6 @@
 
 .welcomeText,
 .cardContent {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     line-height: 1.6;
 }

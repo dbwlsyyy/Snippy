@@ -2,19 +2,30 @@ import React, { useState } from 'react';
 import styles from './NewNote.module.css';
 import type { Note } from '../models/Note';
 import { db } from '../api/db';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import BtnCRUD from '../components/common/BtnCRUD';
+import { useLiveQuery } from 'dexie-react-hooks';
 
 export default function NewNote() {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const noteId = Number(id);
+
+    const [isEditMode, setIsEditMode] = useState<boolean>(
+        noteId ? true : false
+    );
     const [mode, setMode] = useState<'note' | 'snippet'>('note');
     const isNoteMode = mode === 'note';
 
     const [title, setTitle] = useState<string>('');
-    // const [desc, setDesc] = useState<string>('');
     const [tags, setTags] = useState<string[]>([]);
     const [noteContent, setNoteContent] = useState<string>('');
 
+    const note = useLiveQuery(async () => {
+        if (isEditMode) return; // undefinede나 null을 리턴해줘야하나?
+
+        return await db.notes.get(noteId);
+    });
     const handleMode = () => {
         setMode(isNoteMode ? 'snippet' : 'note');
     };
@@ -53,7 +64,7 @@ export default function NewNote() {
             navigate('/notes');
         }
     };
-    const handleDelete = () => {};
+    const handleCancel = () => {};
 
     return (
         <div className={styles.container}>
@@ -62,7 +73,7 @@ export default function NewNote() {
                     <h2 className={styles.headerNumber}># 1</h2>
                     <div className={styles.headerbtn}>
                         <BtnCRUD type="저장" onClick={handleSave} />
-                        <BtnCRUD type="삭제" onClick={handleDelete} />
+                        <BtnCRUD type="취소" onClick={handleCancel} />
                         <button onClick={handleMode} className={styles.btnMode}>
                             {isNoteMode
                                 ? '스니펫 모드로 전환'

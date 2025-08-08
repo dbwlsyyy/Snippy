@@ -41,8 +41,7 @@
     font-weight: 500;
 }
 
-.content,
-.content > p {
+.content {
     font-size: 1.8rem;
-    margin-top: 5rem;
+    margin-top: 7rem;
 }
