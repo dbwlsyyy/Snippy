@@ -5,6 +5,7 @@ import SideBar from './components/SideBar';
 import AppRoutes from './routes/AppRoutes';
 
 function App() {
+    // 왜 브라우저 라우터 위치를 여기에?
     return (
         <BrowserRouter>
             <div className={styles.appContainer}>
