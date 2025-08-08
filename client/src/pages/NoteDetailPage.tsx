@@ -1,37 +1,89 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useLiveQuery } from 'dexie-react-hooks';
+import { useLiveQuery } from 'dexie-react-hooks'; // 이렇게 바로 임포트!
 import { db } from '../api/db';
 import { marked } from 'marked';
+import hljs from 'highlight.js';
+import 'highlight.js/styles/androidstudio.css';
 
 import styles from './NoteDetailPage.module.css';
 import BtnCRUD from '../components/common/BtnCRUD';
 
 function NoteDetailPage() {
     const navigate = useNavigate();
-    const noteParam = useParams();
-    const noteId = Number(noteParam.id);
+    const { id } = useParams<{ id: string }>();
+    const noteId = Number(id);
 
-    //노트 타입 검사? 유효성 검사 어떻게 하지? 근데 디테일페이지로 이동한거면 무조건 note 타입이 Note 일텐데 undefinded가 나올리가 앖잖아 그걸 얘한테 어떻게 알려줘야하지
-    const note = useLiveQuery(() => db.notes.get(noteId));
-    const html = marked.parse(note ? note.content : '');
-    console.log(html);
-    const handleUpdate = () => {};
+    const note = useLiveQuery(async () => {
+        if (isNaN(noteId)) return undefined;
+
+        return await db.notes.get(noteId);
+    }, [noteId]);
+
+    const html = marked.parse(note ? note.content : ''); //useMemo 추후 적용
+
+    useEffect(() => {
+        if (html) hljs.highlightAll();
+    }, [html]);
+
+    if (isNaN(noteId)) {
+        return (
+            <div className={`${styles.container} ${styles.errMsg}`}>
+                <h2 className={styles.pageTitle}>
+                    유효하지 않은 노트 ID 입니다.
+                </h2>
+                <button
+                    onClick={() => navigate('/notes')}
+                    className={styles.editButton}
+                >
+                    노트 목록으로 돌아가기
+                </button>
+            </div>
+        );
+    }
+
+    if (!note) {
+        return (
+            <div className={`${styles.container} ${styles.errMsg}`}>
+                <h2 className={styles.pageTitle}>노트를 찾을 수 없습니다.</h2>
+                <button
+                    onClick={() => navigate('/notes')}
+                    className={styles.editButton}
+                >
+                    노트 목록으로 돌아가기
+                </button>
+            </div>
+        );
+    }
+
+    const handleUpdate = () => {
+        navigate(`/notes/edit/${noteId}`);
+    };
 
     const handleDelete = async () => {
         const confirmDelete = confirm('노트를 삭제하시겠습니까?');
         if (!confirmDelete) return;
-        await db.notes.delete(noteId);
-        navigate('/notes');
+
+        try {
+            await db.notes.delete(noteId);
+            navigate('/notes');
+        } catch (err) {
+            console.error('노트 삭제 실패:', err);
+            alert(
+                `노트 삭제 실패: ${
+                    err instanceof Error ? err.message : String(err)
+                }`
+            );
+        }
     };
 
     return (
         <div className={styles.container}>
-            <h1 className={styles.title}>{note?.title}</h1>
+            <h1 className={styles.title}>{note.title}</h1>
             <div className={styles.metaData}>
                 <div className={styles.meta}>
                     <p className={styles.date}>
-                        {new Date(note?.createdAt).toLocaleString()}
+                        {new Date(note.updatedAt).toLocaleDateString()}
                     </p>
                     <div className={styles.metaBtn}>
                         <BtnCRUD type="수정" onClick={handleUpdate} />
@@ -39,8 +91,10 @@ function NoteDetailPage() {
                     </div>
                 </div>
                 <div className={styles.metaTags}>
-                    {note?.tags.map((tag) => (
-                        <h3 className={styles.tag}>{tag}</h3>
+                    {note.tags.map((tag: string) => (
+                        <h3 key={tag} className={styles.tag}>
+                            {tag}
+                        </h3>
                     ))}
                 </div>
             </div>
