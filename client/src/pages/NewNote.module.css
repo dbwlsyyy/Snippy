@@ -102,17 +102,9 @@ h3 {
     cursor: 'pointer';
     font-size: 1.4rem;
     margin-left: 1rem;
-}
-
-button:focus {
     transition: color 0.3s;
 }
+
 .btnMode:active {
     color: #1976d2;
-}
-.btnSave:active {
-    color: #1976d2;
-}
-.btnDelete:active {
-    color: #d54340;
 }

@@ -3,6 +3,7 @@ import styles from './NewNote.module.css';
 import type { Note } from '../models/Note';
 import { db } from '../api/db';
 import { useNavigate } from 'react-router-dom';
+import BtnCRUD from '../components/common/BtnCRUD';
 
 export default function NewNote() {
     const navigate = useNavigate();
@@ -41,8 +42,7 @@ export default function NewNote() {
                     ...noteFields,
                     content: noteContent,
                 };
-                const id = await db.notes.add(newNote);
-                alert(`노트를 저장하였습니다. ID: ${id}`);
+                await db.notes.add(newNote); // 이부분 변수에 저장 안해도 되지?
             }
         } catch (err) {
             console.error('DB 저장 실패:', err);
@@ -61,15 +61,8 @@ export default function NewNote() {
                 <div className={styles.headerTop}>
                     <h2 className={styles.headerNumber}># 1</h2>
                     <div className={styles.headerbtn}>
-                        <button onClick={handleSave} className={styles.btnSave}>
-                            저장
-                        </button>
-                        <button
-                            onClick={handleDelete}
-                            className={styles.btnDelete}
-                        >
-                            삭제
-                        </button>
+                        <BtnCRUD type="저장" onClick={handleSave} />
+                        <BtnCRUD type="삭제" onClick={handleDelete} />
                         <button onClick={handleMode} className={styles.btnMode}>
                             {isNoteMode
                                 ? '스니펫 모드로 전환'
@@ -86,17 +79,6 @@ export default function NewNote() {
                     maxLength={50}
                     rows={1}
                 />
-
-                {/* <div className={styles.headerDescription}>
-                    <h3>Description</h3>
-                    <input
-                        className={styles.descInput}
-                        type="text"
-                        value={desc}
-                        onChange={(e) => setDesc(e.target.value)}
-                        placeholder="노트 내용 한 줄로 요약해보세요."
-                    />
-                </div> */}
 
                 <div className={styles.headerTag}>
                     <h3>Tags</h3>

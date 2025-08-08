@@ -1,0 +1,16 @@
+button {
+}
+
+button:focus {
+    transition: color 0.3s;
+}
+
+.btnSave:active {
+    color: #1976d2;
+}
+.btnUpdate:active {
+    color: rgba(0, 255, 247, 0.639);
+}
+.btnDelete:active {
+    color: #d54340;
+}
