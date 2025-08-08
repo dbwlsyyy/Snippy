@@ -53,8 +53,25 @@ export default function NewNote() {
             createdAt: timestamp,
             updatedAt: timestamp,
         };
+        const updatedNoteFields = {
+            title: title.trim(),
+            tags: [
+                ...new Set(
+                    tags.map((tag) => tag.trim()).filter((tag) => tag !== '')
+                ),
+            ],
+            content: noteContent,
+            updatedAt: timestamp,
+        };
 
         try {
+            if (isEditMode) {
+                const updatedNote = {
+                    ...updatedNoteFields,
+                };
+                await db.notes.update(noteId, updatedNote);
+                return;
+            }
             if (isNoteMode) {
                 const newNote: Note = {
                     ...noteFields,

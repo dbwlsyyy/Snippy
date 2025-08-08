@@ -83,7 +83,7 @@ function NoteDetailPage() {
             <div className={styles.metaData}>
                 <div className={styles.meta}>
                     <p className={styles.date}>
-                        {new Date(note.updatedAt).toLocaleDateString()}
+                        {new Date(note.createdAt).toLocaleDateString()}
                     </p>
                     <div className={styles.metaBtn}>
                         <BtnCRUD type="수정" onClick={handleUpdate} />

@@ -8,7 +8,7 @@ import { stripMarkdown } from '../utils/markdownUtils';
 function NoteListPage() {
     const notes =
         useLiveQuery(
-            () => db.notes.orderBy('updatedAt').reverse().toArray(),
+            () => db.notes.orderBy('createdAt').reverse().toArray(),
             []
         ) || [];
 
@@ -51,7 +51,7 @@ function NoteListPage() {
                                 )}
                                 <span className={styles.noteDate}>
                                     {new Date(
-                                        note.updatedAt
+                                        note.createdAt
                                     ).toLocaleDateString()}
                                 </span>
                             </div>
