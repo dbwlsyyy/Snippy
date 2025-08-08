@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './NewNote.module.css';
 import type { Note } from '../models/Note';
 import { db } from '../api/db';
@@ -22,13 +22,20 @@ export default function NewNote() {
     const [noteContent, setNoteContent] = useState<string>('');
 
     const note = useLiveQuery(async () => {
-        if (isEditMode) return; // undefinede나 null을 리턴해줘야하나?
-
+        if (isEditMode === false) return; // undefinede나 null을 리턴해줘야하나?
         return await db.notes.get(noteId);
     });
     const handleMode = () => {
         setMode(isNoteMode ? 'snippet' : 'note');
     };
+
+    useEffect(() => {
+        if (note) {
+            setTitle(note.title);
+            setTags([...note.tags]);
+            setNoteContent(note.content);
+        }
+    }, [note]);
 
     const handleSave = async () => {
         if (!title.trim()) {
@@ -64,7 +71,17 @@ export default function NewNote() {
             navigate('/notes');
         }
     };
-    const handleCancel = () => {};
+    const handleCancel = () => {
+        // const confirm = window.confirm('작성을 취소하시겠습니까?')
+        if (isEditMode) {
+            navigate(-1);
+        }
+
+        setTitle('');
+        setTags([]);
+        setNoteContent('');
+        return;
+    };
 
     return (
         <div className={styles.container}>

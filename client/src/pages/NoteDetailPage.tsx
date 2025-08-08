@@ -20,7 +20,7 @@ function NoteDetailPage() {
         return await db.notes.get(noteId);
     }, [noteId]);
 
-    const html = marked.parse(note ? note.content : ''); // useMemo 추후 적용
+    const html = marked.parse(note ? note.content : ''); //useMemo 추후 적용
 
     useEffect(() => {
         if (html) hljs.highlightAll();
