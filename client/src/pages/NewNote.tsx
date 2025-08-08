@@ -8,12 +8,11 @@ import { useLiveQuery } from 'dexie-react-hooks';
 
 export default function NewNote() {
     const navigate = useNavigate();
-    const { id } = useParams();
-    const noteId = Number(id);
+    const { id } = useParams<{ id?: string }>();
+    const noteId = id ? Number(id) : NaN; // null이나 undefined로 해도 상관없어?
 
-    const [isEditMode, setIsEditMode] = useState<boolean>(
-        noteId ? true : false
-    );
+    const isEditMode = noteId ? true : false;
+
     const [mode, setMode] = useState<'note' | 'snippet'>('note');
     const isNoteMode = mode === 'note';
 
@@ -21,10 +20,16 @@ export default function NewNote() {
     const [tags, setTags] = useState<string[]>([]);
     const [noteContent, setNoteContent] = useState<string>('');
 
+    const newNoteId = useLiveQuery<number | undefined>(() => {
+        if (!isEditMode) return undefined; // null이나 NaN으로 해도 상관없어?
+        return db.notes.count().then((count) => count + 1);
+    }, [isEditMode]);
+
     const note = useLiveQuery(async () => {
-        if (isEditMode === false) return; // undefinede나 null을 리턴해줘야하나?
+        if (!isEditMode) return;
         return await db.notes.get(noteId);
     });
+
     const handleMode = () => {
         setMode(isNoteMode ? 'snippet' : 'note');
     };
@@ -36,6 +41,11 @@ export default function NewNote() {
             setNoteContent(note.content);
         }
     }, [note]);
+    useEffect(() => {
+        setTitle('');
+        setTags([]);
+        setNoteContent('');
+    }, [isEditMode]);
 
     const handleSave = async () => {
         if (!title.trim()) {
@@ -89,14 +99,17 @@ export default function NewNote() {
         }
     };
     const handleCancel = () => {
-        // const confirm = window.confirm('작성을 취소하시겠습니까?')
-        if (isEditMode) {
-            navigate(-1);
+        const confirm = window.confirm('작성을 취소하시겠습니까?');
+        if (confirm) {
+            if (isEditMode) {
+                navigate(`/notes/${noteId}`);
+            } else {
+                setTitle('');
+                setTags([]);
+                setNoteContent('');
+                navigate('/');
+            }
         }
-
-        setTitle('');
-        setTags([]);
-        setNoteContent('');
         return;
     };
 
@@ -104,7 +117,7 @@ export default function NewNote() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.headerTop}>
-                    <h2 className={styles.headerNumber}># 1</h2>
+                    <h2 className={styles.headerNumber}># {newNoteId}</h2>
                     <div className={styles.headerbtn}>
                         <BtnCRUD type="저장" onClick={handleSave} />
                         <BtnCRUD type="취소" onClick={handleCancel} />
@@ -131,7 +144,9 @@ export default function NewNote() {
                         className={styles.tagInput}
                         type="text"
                         value={tags}
-                        onChange={(e) => setTags(e.target.value.split(','))}
+                        onChange={(e) =>
+                            setTags([...e.target.value.split(',')])
+                        }
                         placeholder="태그를 입력하세요. 쉼표로 구분할 수 있습니다."
                     />
                 </div>
