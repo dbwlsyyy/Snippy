@@ -3,6 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks'; // ✨ 실시간 쿼리를 위
 import { db } from '../api/db'; // Dexie.js DB 인스턴스
 import styles from './NoteListPage.module.css';
 import { Link } from 'react-router-dom';
+import { stripMarkdown } from '../utils/markdownUtils';
 
 function NoteListPage() {
     const notes =
@@ -29,7 +30,7 @@ function NoteListPage() {
                                 {note.title}
                             </Link>
                             <p className={styles.contentPreview}>
-                                {note.content.substring(0, 200)}
+                                {stripMarkdown(note.content).substring(0, 200)}
                                 {note.content.length > 200 ? '...' : ''}
                             </p>
 

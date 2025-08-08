@@ -1,8 +1,9 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { db } from '../api/db';
 import { useLiveQuery } from 'dexie-react-hooks';
-import type { Note } from '../models/Note';
+import { db } from '../api/db';
+import { marked } from 'marked';
+
 import styles from './NoteDetailPage.module.css';
 import BtnCRUD from '../components/common/BtnCRUD';
 
@@ -13,7 +14,7 @@ function NoteDetailPage() {
 
     //노트 타입 검사? 유효성 검사 어떻게 하지? 근데 디테일페이지로 이동한거면 무조건 note 타입이 Note 일텐데 undefinded가 나올리가 앖잖아 그걸 얘한테 어떻게 알려줘야하지
     const note = useLiveQuery(() => db.notes.get(noteId));
-
+    const html = marked.parse(note ? note.content : '');
     const handleUpdate = () => {};
 
     const handleDelete = async () => {
@@ -43,7 +44,7 @@ function NoteDetailPage() {
                 </div>
             </div>
 
-            <p className={styles.content}>{note?.content}</p>
+            <div dangerouslySetInnerHTML={{ __html: html }} />
         </div>
     );
 }
