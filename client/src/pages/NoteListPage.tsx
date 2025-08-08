@@ -35,7 +35,7 @@ function NoteListPage() {
                             </p>
 
                             <div className={styles.noteMeta}>
-                                {note.tags && note.tags.length > 0 && (
+                                {note.tags && note.tags.length > 0 ? (
                                     <div className={styles.noteTags}>
                                         {note.tags.map((tag) => (
                                             <span
@@ -46,8 +46,10 @@ function NoteListPage() {
                                             </span>
                                         ))}
                                     </div>
+                                ) : (
+                                    <div></div>
                                 )}
-                                <span>
+                                <span className={styles.noteDate}>
                                     {new Date(
                                         note.updatedAt
                                     ).toLocaleDateString()}

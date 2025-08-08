@@ -42,7 +42,7 @@ export default function NewNote() {
                     ...noteFields,
                     content: noteContent,
                 };
-                await db.notes.add(newNote); // 이부분 변수에 저장 안해도 되지?
+                await db.notes.add(newNote);
             }
         } catch (err) {
             console.error('DB 저장 실패:', err);
@@ -100,7 +100,7 @@ export default function NewNote() {
                     value={noteContent}
                     onChange={(e) => setNoteContent(e.target.value)}
                     placeholder="오늘의 아이디어를 기록하세요."
-                ></textarea>
+                />
             </div>
         </div>
     );

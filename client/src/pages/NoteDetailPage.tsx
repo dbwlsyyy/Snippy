@@ -92,9 +92,9 @@ function NoteDetailPage() {
                 </div>
                 <div className={styles.metaTags}>
                     {note.tags.map((tag: string) => (
-                        <h3 key={tag} className={styles.tag}>
+                        <span key={tag} className={styles.tag}>
                             {tag}
-                        </h3>
+                        </span>
                     ))}
                 </div>
             </div>

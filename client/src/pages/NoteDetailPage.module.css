@@ -3,7 +3,13 @@
 }
 
 .title {
+    font-size: 5em;
+    line-height: 1.1;
     margin: 0;
+}
+
+.metaData {
+    margin-top: 1.7rem;
 }
 
 .meta {
@@ -11,17 +17,22 @@
     justify-content: space-between;
     align-items: center;
 }
+
 .date {
-    font-size: 1.6rem;
+    line-height: 1.6;
+    font-size: 1.7rem;
 }
 
 .metaTags {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
     margin-right: 1rem;
     gap: 0.5rem;
 }
 
 .tag {
+    line-height: 1.3;
+    margin: 0;
     background-color: rgba(66, 165, 245, 0.2);
     color: var(--color-highlight-btn);
     border-radius: 3px;

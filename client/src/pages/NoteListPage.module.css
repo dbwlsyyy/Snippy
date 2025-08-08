@@ -1,3 +1,8 @@
+.pageTitle {
+    font-size: 3.5rem;
+    line-height: 1.2;
+}
+
 .noteList {
     list-style: none;
     padding: 0 3rem;
@@ -22,17 +27,27 @@
 }
 
 .contentPreview {
+    line-height: 1.6;
     margin-top: 1.5rem;
-    font-size: 1.5rem;
+    font-size: 1.6rem;
 }
 
 .noteMeta {
-    font-size: 1.2rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.noteDate {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 1.5rem;
     color: rgba(255, 255, 255, 0.5);
 }
 
 .noteTags {
-    display: inline-flex;
+    display: flex;
+    flex-wrap: wrap;
+
     margin-right: 1rem;
     gap: 0.5rem;
 }
@@ -42,5 +57,10 @@
     color: var(--color-highlight-btn);
     border-radius: 3px;
     padding: 0.15rem 0.5rem;
-    font-size: 1.2rem;
+    font-size: 1.3rem;
+}
+
+.emptyMessage {
+    font-size: 1.5rem;
+    line-height: 1.6;
 }
