@@ -1,6 +1,18 @@
+.myNoteHeader {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+}
+
 .pageTitle {
     font-size: 3.5rem;
     line-height: 1.2;
+}
+
+.totalPosts {
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-style: italic;
 }
 
 .noteList {

@@ -21,7 +21,7 @@ export default function NewNote() {
     const [noteContent, setNoteContent] = useState<string>('');
 
     const newNoteId = useLiveQuery<number | undefined>(() => {
-        if (!isEditMode) return undefined; // null이나 NaN으로 해도 상관없어?
+        if (isEditMode) return undefined;
         return db.notes.count().then((count) => count + 1);
     }, [isEditMode]);
 
@@ -98,6 +98,7 @@ export default function NewNote() {
             navigate('/notes');
         }
     };
+
     const handleCancel = () => {
         const confirm = window.confirm('작성을 취소하시겠습니까?');
         if (confirm) {
@@ -117,7 +118,9 @@ export default function NewNote() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.headerTop}>
-                    <h2 className={styles.headerNumber}># {newNoteId}</h2>
+                    <h2 className={styles.headerNumber}>
+                        {isEditMode ? '' : `# ${newNoteId}`}
+                    </h2>
                     <div className={styles.headerbtn}>
                         <BtnCRUD type="저장" onClick={handleSave} />
                         <BtnCRUD type="취소" onClick={handleCancel} />
@@ -143,7 +146,7 @@ export default function NewNote() {
                     <input
                         className={styles.tagInput}
                         type="text"
-                        value={tags}
+                        value={tags} //
                         onChange={(e) =>
                             setTags([...e.target.value.split(',')])
                         }

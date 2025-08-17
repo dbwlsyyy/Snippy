@@ -12,9 +12,16 @@ function NoteListPage() {
             []
         ) || [];
 
+    const totalPosts = useLiveQuery<number>(() => {
+        return db.notes.count();
+    }, []);
+
     return (
         <div className={styles.container}>
-            <h2 className={styles.pageTitle}>📚 내 노트</h2>
+            <div className={styles.myNoteHeader}>
+                <h2 className={styles.pageTitle}>📚 내 노트</h2>
+                <span className={styles.totalPosts}>{totalPosts} Posts</span>
+            </div>
             {notes.length === 0 ? (
                 <p className={styles.emptyMessage}>
                     아직 노트가 없습니다. 새 노트를 작성해보세요!
