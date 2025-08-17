@@ -1,18 +1,23 @@
 .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+
     background-color: var(--color-main);
-    padding: 2.4rem 3.2rem;
     box-shadow: 0 0.2rem 0.4rem rgba(0, 0, 0, 0.2);
     display: flex;
     align-items: center;
     justify-content: space-between;
     flex-shrink: 0;
+    height: 9.3rem;
 }
 
 .headerTitle {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin: 0;
+    margin: 2rem;
     font-size: 3rem;
     cursor: pointer;
 }
@@ -69,7 +74,9 @@
 
 .headerRight {
     display: flex;
-    gap: 1.6rem;
+    gap: 1.8rem;
+    margin: 2rem;
+
     align-items: center;
 }
 

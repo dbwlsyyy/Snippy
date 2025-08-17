@@ -9,10 +9,12 @@
 .mainContentArea {
     display: flex;
     flex-grow: 1;
+    margin-top: 9.3rem;
 }
 
 .mainSection {
     flex-grow: 1;
     padding: 3rem;
+    padding-left: calc(30rem + 3rem);
     background-color: var(--color-background);
 }
