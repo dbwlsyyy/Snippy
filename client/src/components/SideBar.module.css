@@ -1,6 +1,6 @@
 .sidebar {
     background-color: var(--color-card-bg);
-    width: 25rem;
+    width: var(--sidebar-current-width, 25rem);
     padding: 2.4rem;
     border-right: 0.1rem solid rgba(255, 255, 255, 0.1);
 
@@ -12,24 +12,38 @@
     display: flex;
     flex-direction: column;
     gap: 1.6rem;
+    overflow-y: auto;
+    overflow-x: hidden;
+    transition: width 0.2s ease-in-out, padding 0.2s ease-in-out;
+    z-index: 100;
 }
 
-.btnClose {
-    font-size: 2.5rem;
-    display: flex;
-    justify-content: end;
-    cursor: pointer;
+.sidebar.folded {
+    align-items: center;
+}
+
+.btnToggle {
+    position: absolute;
+    top: 2.4rem;
+    right: 1rem;
+    font-size: 2rem; /* 여기 transition이 없는데 애니메이션 작동 왜 하는지 */
+}
+
+.btnToggle:hover {
+    color: var(--color-highlight-btn);
 }
 
 .sidebarNavList {
     list-style: none;
     padding: 0;
-    margin: 1.3rem 0 0 0;
+    margin-top: 5rem;
+    width: 100%;
 }
 
 .sidebarNavItem {
-    margin-bottom: 1.3rem;
+    margin-bottom: 1rem;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 .sidebarNavLink {
@@ -44,25 +58,56 @@
     gap: 1rem;
 }
 
+.sidebar.folded .sidebarNavLink {
+    justify-content: center;
+    gap: 0;
+}
+
 .sidebarNavLink:hover {
     color: var(--color-highlight-btn);
+}
+
+.sidebarNavLink svg {
+    height: 3rem;
+}
+
+.label {
+    opacity: 1;
+    transition: opacity 0.15s ease-in; /* 적용이 잘 안되고 있음 */
+}
+
+.sidebar.folded .label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
 }
 
 .btnNewNote {
     display: flex;
     justify-content: center;
+    align-items: center;
     background-color: var(--color-highlight-btn);
-    color: whvar(--color-text);
+    color: white;
     border: none;
     padding: 1.3rem 2.4rem;
     border-radius: 0.5rem;
     font-size: 1.6rem;
     cursor: pointer;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, padding 0.3s ease-in-out,
+        font-size 0.3s ease-in-out, width 0.3s ease-in-out;
     margin-top: auto;
+    white-space: nowrap;
 }
 
 .btnNewNote:hover {
     background-color: var(--color-main);
     color: var(--color-text);
+}
+
+.sidebar.folded .btnNewNote {
+    width: 4rem;
+    height: 4rem;
+    padding: 0;
+    font-size: 2.2rem;
+    border-radius: 50%;
 }

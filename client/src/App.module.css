@@ -15,6 +15,7 @@
 .mainSection {
     flex-grow: 1;
     padding: 3rem;
-    padding-left: calc(30rem + 3rem);
     background-color: var(--color-background);
+    margin-left: calc(var(--sidebar-current-width) + 5rem);
+    transition: margin-left 0.3s ease-in-out; /* 패딩도 애니메이션 */
 }
