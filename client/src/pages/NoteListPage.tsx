@@ -4,6 +4,7 @@ import { db } from '../api/db'; // Dexie.js DB 인스턴스
 import styles from './NoteListPage.module.css';
 import { Link } from 'react-router-dom';
 import { stripMarkdown } from '../utils/markdownUtils';
+import { RiStickyNoteFill } from 'react-icons/ri';
 
 function NoteListPage() {
     const notes =
@@ -19,7 +20,9 @@ function NoteListPage() {
     return (
         <div className={styles.container}>
             <div className={styles.myNoteHeader}>
-                <h2 className={styles.pageTitle}>📚 내 노트</h2>
+                <h2 className={styles.pageTitle}>
+                    <RiStickyNoteFill />
+                </h2>
                 <span className={styles.totalPosts}>{totalPosts} Posts</span>
             </div>
             {notes.length === 0 ? (

@@ -5,11 +5,13 @@ import { db } from '../api/db';
 import { useNavigate, useParams } from 'react-router-dom';
 import BtnCRUD from '../components/common/BtnCRUD';
 import { useLiveQuery } from 'dexie-react-hooks';
+import NoteForm from '../components/forms/NoteForm';
+import SnippetForm from '../components/forms/SnippetForm';
 
 export default function NewNote() {
     const navigate = useNavigate();
     const { id } = useParams<{ id?: string }>();
-    const noteId = id ? Number(id) : NaN; // null이나 undefined로 해도 상관없어?
+    const noteId = id ? Number(id) : NaN;
 
     const isEditMode = noteId ? true : false;
 
@@ -20,19 +22,23 @@ export default function NewNote() {
     const [tags, setTags] = useState<string[]>([]);
     const [noteContent, setNoteContent] = useState<string>('');
 
+    const handleMode = () => {
+        setMode(isNoteMode ? 'snippet' : 'note');
+    };
+
     const newNoteId = useLiveQuery<number | undefined>(() => {
         if (isEditMode) return undefined;
         return db.notes.count().then((count) => count + 1);
     }, [isEditMode]);
 
+    const newSnippetId = useLiveQuery<number>(() => {
+        return db.snippets.count().then((count) => count + 1);
+    }, []);
+
     const note = useLiveQuery(async () => {
         if (!isEditMode) return;
         return await db.notes.get(noteId);
     });
-
-    const handleMode = () => {
-        setMode(isNoteMode ? 'snippet' : 'note');
-    };
 
     useEffect(() => {
         if (note) {
@@ -41,6 +47,7 @@ export default function NewNote() {
             setNoteContent(note.content);
         }
     }, [note]);
+
     useEffect(() => {
         setTitle('');
         setTags([]);
@@ -52,50 +59,60 @@ export default function NewNote() {
             alert('제목을 입력해주세요.');
             return;
         }
-        const timestamp = Date.now();
-        const noteFields = {
-            title: title.trim(),
-            tags: [
-                ...new Set(
-                    tags.map((tag) => tag.trim()).filter((tag) => tag !== '')
-                ),
-            ],
-            createdAt: timestamp,
-            updatedAt: timestamp,
-        };
-        const updatedNoteFields = {
-            title: title.trim(),
-            tags: [
-                ...new Set(
-                    tags.map((tag) => tag.trim()).filter((tag) => tag !== '')
-                ),
-            ],
-            content: noteContent,
-            updatedAt: timestamp,
-        };
 
-        try {
-            if (isEditMode) {
-                const updatedNote = {
-                    ...updatedNoteFields,
-                };
-                await db.notes.update(noteId, updatedNote);
-                return;
+        if (isNoteMode) {
+            const timestamp = Date.now();
+            const noteFields = {
+                title: title.trim(),
+                tags: [
+                    ...new Set(
+                        tags
+                            .map((tag) => tag.trim())
+                            .filter((tag) => tag !== '')
+                    ),
+                ],
+                createdAt: timestamp,
+                updatedAt: timestamp, // 없어도될듯?
+            };
+            const updatedNoteFields = {
+                title: title.trim(),
+                tags: [
+                    ...new Set(
+                        tags
+                            .map((tag) => tag.trim())
+                            .filter((tag) => tag !== '')
+                    ),
+                ],
+                content: noteContent,
+                updatedAt: timestamp,
+            };
+
+            try {
+                if (isEditMode) {
+                    const updatedNote = {
+                        ...updatedNoteFields,
+                    };
+                    await db.notes.update(noteId, updatedNote);
+                    return;
+                }
+                if (isNoteMode) {
+                    const newNote: Note = {
+                        ...noteFields,
+                        content: noteContent,
+                    };
+                    await db.notes.add(newNote);
+                }
+            } catch (err) {
+                console.error('DB 저장 실패:', err);
+                alert(
+                    `저장 실패: ${
+                        err instanceof Error ? err.message : String(err)
+                    }`
+                );
+            } finally {
+                navigate('/notes');
             }
-            if (isNoteMode) {
-                const newNote: Note = {
-                    ...noteFields,
-                    content: noteContent,
-                };
-                await db.notes.add(newNote);
-            }
-        } catch (err) {
-            console.error('DB 저장 실패:', err);
-            alert(
-                `저장 실패: ${err instanceof Error ? err.message : String(err)}`
-            );
-        } finally {
-            navigate('/notes');
+        } else {
         }
     };
 
@@ -119,7 +136,11 @@ export default function NewNote() {
             <div className={styles.header}>
                 <div className={styles.headerTop}>
                     <h2 className={styles.headerNumber}>
-                        {isEditMode ? '' : `# ${newNoteId}`}
+                        {isEditMode
+                            ? ''
+                            : isNoteMode
+                            ? `# ${newNoteId}`
+                            : `# ${newSnippetId}`}
                     </h2>
                     <div className={styles.headerbtn}>
                         <BtnCRUD type="저장" onClick={handleSave} />
@@ -158,12 +179,14 @@ export default function NewNote() {
             <hr />
 
             <div className={styles.contents}>
-                <textarea
-                    className={styles.contentsInput}
-                    value={noteContent}
-                    onChange={(e) => setNoteContent(e.target.value)}
-                    placeholder="오늘의 아이디어를 기록하세요."
-                />
+                {isNoteMode ? (
+                    <NoteForm
+                        noteContent={noteContent}
+                        setNoteContent={setNoteContent}
+                    />
+                ) : (
+                    <SnippetForm />
+                )}
             </div>
         </div>
     );
