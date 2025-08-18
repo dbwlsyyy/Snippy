@@ -14,6 +14,13 @@
     gap: 1.6rem;
 }
 
+.btnClose {
+    font-size: 2.5rem;
+    display: flex;
+    justify-content: end;
+    cursor: pointer;
+}
+
 .sidebarNavList {
     list-style: none;
     padding: 0;

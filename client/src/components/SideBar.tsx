@@ -1,11 +1,20 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './SideBar.module.css';
+import { TbArrowBarLeft } from 'react-icons/tb';
+import { useState } from 'react';
 
 export default function SideBar() {
     const navigate = useNavigate();
+    const [isFolded, setIsFolded] = useState<boolean>(false);
 
     return (
         <nav className={styles.sidebar}>
+            <div
+                className={styles.btnClose}
+                onClick={() => setIsFolded((prev) => !prev)}
+            >
+                <TbArrowBarLeft />
+            </div>
             <ul className={styles.sidebarNavList}>
                 <li className={styles.sidebarNavItem}>
                     <span
