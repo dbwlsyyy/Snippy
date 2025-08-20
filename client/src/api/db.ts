@@ -22,7 +22,8 @@ export class AppDB extends Dexie {
             // 'title, createdAt, updatedAt': 'title', 'createdAt', 'updatedAt' 필드에 인덱스를 걸어줌
             // '*tags': 'tags' 필드가 배열일 때 사용하는 문법. 배열 안에 있는 각각의 값(태그 하나하나)에 인덱스를 걸어줌
             notes: '++id, title, *tags, createdAt, updatedAt',
-            snippets: '++id, title, language, *tags, createdAt, updatedAt',
+            snippets:
+                '++id, title,description, language, *tags, createdAt, updatedAt',
         });
     }
 }
