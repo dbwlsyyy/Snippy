@@ -13,9 +13,10 @@ ul {
 }
 
 .pageTitle {
-    font-size: 3.5rem;
-    font-weight: 800;
-    margin: 0;
+    font-size: 3.2rem;
+    color: var(--color-highlight-btn);
+    margin-top: 0;
+    margin-bottom: 3.2rem;
 }
 
 .totalPosts {

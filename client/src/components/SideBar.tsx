@@ -3,7 +3,7 @@ import styles from './SideBar.module.css';
 import { TbArrowBarLeft, TbArrowBarRight } from 'react-icons/tb';
 import {
     RiStickyNoteLine,
-    RiCodeBlock,
+    RiCodeBoxLine,
     RiStarLine,
     RiPriceTag3Line,
     RiSettings3Line,
@@ -53,7 +53,7 @@ export default function SideBar({ isFolded, setIsFolded }: SideBarProps) {
                     to="/notes"
                 />
                 <ItemComponent
-                    icon={<RiCodeBlock size={svgSize} />}
+                    icon={<RiCodeBoxLine size={svgSize} />}
                     label="내 스니펫"
                     to="/snippets"
                 />

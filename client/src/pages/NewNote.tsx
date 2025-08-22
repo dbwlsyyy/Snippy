@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styles from './NewNote.module.css';
-import type { Note } from '../models/Note';
+import type { Note, Snippet } from '../models/Note';
 import { db } from '../api/db';
 import { useNavigate, useParams } from 'react-router-dom';
 import BtnCRUD from '../components/common/BtnCRUD';
@@ -15,16 +15,17 @@ export default function NewNote() {
 
     const isEditMode = noteId ? true : false;
 
-    const [mode, setMode] = useState<'note' | 'snippet'>('note');
-    const isNoteMode = mode === 'note';
-
     const [title, setTitle] = useState<string>('');
     const [tags, setTags] = useState<string[]>([]);
+
     const [noteContent, setNoteContent] = useState<string>('');
 
-    const handleMode = () => {
-        setMode(isNoteMode ? 'snippet' : 'note');
-    };
+    const [language, setLanguage] = useState<string>('javascript');
+    const [description, setDescription] = useState<string>('');
+    const [code, setCode] = useState<string>('');
+
+    const [mode, setMode] = useState<'note' | 'snippet'>('note');
+    const isNoteMode = mode === 'note';
 
     const newNoteId = useLiveQuery<number | undefined>(() => {
         if (isEditMode) return undefined;
@@ -54,6 +55,10 @@ export default function NewNote() {
         setNoteContent('');
     }, [isEditMode]);
 
+    const handleMode = () => {
+        setMode(isNoteMode ? 'snippet' : 'note');
+    };
+
     const handleSave = async () => {
         if (!title.trim()) {
             alert('제목을 입력해주세요.');
@@ -65,14 +70,14 @@ export default function NewNote() {
             const noteFields = {
                 title: title.trim(),
                 tags: [
-                    ...new Set(
+                    ...new Set( // new Set()으로 중복값 허용하지 않음
                         tags
                             .map((tag) => tag.trim())
                             .filter((tag) => tag !== '')
                     ),
                 ],
                 createdAt: timestamp,
-                updatedAt: timestamp, // 없어도될듯?
+                updatedAt: timestamp,
             };
             const updatedNoteFields = {
                 title: title.trim(),
@@ -113,6 +118,57 @@ export default function NewNote() {
                 navigate('/notes');
             }
         } else {
+            const timestamp = Date.now();
+            const snippetField = {
+                title: title.trim(),
+                tags: [
+                    ...new Set(
+                        tags
+                            .map((tag) => tag.trim())
+                            .filter((tag) => tag !== '')
+                    ),
+                ],
+                language: language,
+                description: description,
+                createdAt: timestamp,
+                updatedAt: timestamp,
+            };
+            const updatedSnippetFields = {
+                title: title.trim(),
+                tags: [
+                    ...new Set(
+                        tags
+                            .map((tag) => tag.trim())
+                            .filter((tag) => tag !== '')
+                    ),
+                ],
+                code: code,
+                updatedAt: timestamp,
+            };
+            try {
+                if (isEditMode) {
+                    const updatedSnippet = {
+                        ...updatedSnippetFields,
+                    };
+                    await db.snippets.update(noteId, updatedSnippet);
+                    return;
+                }
+                const newSnippet: Snippet = {
+                    ...snippetField,
+                    code,
+                    description,
+                };
+                await db.snippets.add(newSnippet);
+            } catch (err) {
+                console.error('DB 저장 실패:', err);
+                alert(
+                    `저장 실패: ${
+                        err instanceof Error ? err.message : String(err)
+                    }`
+                );
+            } finally {
+                navigate('/snippets');
+            }
         }
     };
 
@@ -185,7 +241,12 @@ export default function NewNote() {
                         setNoteContent={setNoteContent}
                     />
                 ) : (
-                    <SnippetForm />
+                    <SnippetForm
+                        language={language}
+                        setLanguage={setLanguage}
+                        setDescription={setDescription}
+                        setCode={setCode}
+                    />
                 )}
             </div>
         </div>

@@ -1,13 +1,12 @@
 import Dexie, { type Table } from 'dexie';
-import type { Snippet } from '../models/Snippet';
-import type { Note } from '../models/Note';
+import type { Note, Snippet } from '../models/Note';
 
 export class AppDB extends Dexie {
     // 데이터베이스 안에 저장할 '객체 스토어' (Object Store)들을 정의
     //    '!'는 TypeScript에서 이 변수가 나중에 반드시 초기화될 것이라고 알려주는 'Non-null Assertion' 연산자
     //    <Note>나 <Snippet>은 이 객체 스토어에 들어갈 데이터의 '타입'을 명시
-    notes!: Table<Note>;
-    snippets!: Table<Snippet>; // Snippet 타입 데이터를 저장할 'snippets' 객체 스토어
+    notes!: Table<Note, number>; // 기본 키는 넘버 타입
+    snippets!: Table<Snippet, number>; // Snippet 타입 데이터를 저장할 'snippets' 객체 스토어
 
     // 생성자(constructor) 함수에서 데이터베이스 이름과 스키마(구조)를 정의
     constructor() {
