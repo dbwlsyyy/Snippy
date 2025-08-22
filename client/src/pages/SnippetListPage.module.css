@@ -42,7 +42,7 @@
 
 .cardTitle {
     font-size: 2.2rem;
-    color: var(--color-highlight-btn);
+    color: var(--color-text);
     margin-top: 0;
     margin-bottom: 0.8rem;
     overflow: hidden;
@@ -63,18 +63,25 @@
 }
 
 .languageBadge {
-    background-color: rgba(66, 165, 245, 0.2);
+    background: #195ef2;
+    color: white;
+    font-size: 1.2rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 999px;
+    font-weight: 600;
+
+    /* background-color: rgba(66, 165, 245, 0.2);
     color: var(--color-highlight-btn);
     padding: 0.4rem 0.8rem;
     border-radius: 0.4rem;
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 1.2rem;
-    display: inline-block;
+    display: inline-block; */
 }
 
 .codePreviewWrapper {
-    background-color: #1e1e1e; /* 코드 에디터와 유사한 배경 */
+    background-color: #0d1117;
     border-radius: 0.5rem;
     padding: 1.2rem;
     font-family: 'Fira Code', 'JetBrains Mono', 'Consolas', monospace; /* 고정폭 폰트 */
