@@ -5,6 +5,7 @@ import NewNote from '../pages/NewNote';
 import NoteListPage from '../pages/NoteListPage';
 import NoteDetailPage from '../pages/NoteDetailPage';
 import SnippetListPage from '../pages/SnippetListPage';
+import SnippetDetailPage from '../pages/SnippetDetailPage';
 
 export default function AppRoutes() {
     return (
@@ -13,8 +14,10 @@ export default function AppRoutes() {
             <Route path="new" element={<NewNote />} />
             <Route path="/notes" element={<NoteListPage />} />
             <Route path="/snippets" element={<SnippetListPage />} />
-            <Route path="/notes/:id" element={<NoteDetailPage />} />
-            <Route path="/notes/edit/:id" element={<NewNote />} />
+            <Route path="/note/:id" element={<NoteDetailPage />} />
+            <Route path="/snippet/:id" element={<SnippetDetailPage />} />
+            <Route path="/note/edit/:id" element={<NewNote />} />
+            <Route path="/snippet/edit/:id" element={<NewNote />} />
 
             {/* <Route path="*" element={<NotFoundPage />} /> */}
         </Routes>

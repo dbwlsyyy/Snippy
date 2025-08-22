@@ -57,7 +57,7 @@ function NoteDetailPage() {
     }
 
     const handleUpdate = () => {
-        navigate(`/notes/edit/${noteId}`);
+        navigate(`/note/edit/${noteId}`);
     };
 
     const handleDelete = async () => {

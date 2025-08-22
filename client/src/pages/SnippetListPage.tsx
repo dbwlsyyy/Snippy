@@ -23,6 +23,7 @@ hljs.registerLanguage('typescript', typescript);
 
 import 'highlight.js/styles/github-dark.css';
 import type { Snippet } from '../models/Note';
+import { useNavigate } from 'react-router-dom';
 
 export default function SnippetListPage() {
     const snippets =
@@ -31,6 +32,7 @@ export default function SnippetListPage() {
             []
         ) || [];
 
+    const navigate = useNavigate();
     // const handleUpdateSnippet = async (id: number) => {
     //     try {
     //         await db.snippets.delete(id);
@@ -72,6 +74,9 @@ export default function SnippetListPage() {
                             <div
                                 key={snippet.id}
                                 className={styles.snippetCard}
+                                onClick={() =>
+                                    navigate(`/snippet/${snippet.id}`)
+                                } // 여기서는 Link 못 쓰나?
                             >
                                 <h3 className={styles.cardTitle}>
                                     {snippet.title}

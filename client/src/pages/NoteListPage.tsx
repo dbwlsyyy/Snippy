@@ -34,7 +34,7 @@ function NoteListPage() {
                     {notes.map((note) => (
                         <li key={note.id} className={styles.noteListItem}>
                             <Link
-                                to={`/notes/${note.id}`}
+                                to={`/note/${note.id}`}
                                 className={styles.noteTitle}
                             >
                                 {note.title}
