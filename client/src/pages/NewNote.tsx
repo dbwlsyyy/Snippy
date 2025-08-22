@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './NewNote.module.css';
 import type { Note, Snippet } from '../models/Note';
 import { db } from '../api/db';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import BtnCRUD from '../components/common/BtnCRUD';
 import { useLiveQuery } from 'dexie-react-hooks';
 import NoteForm from '../components/forms/NoteForm';
@@ -11,9 +11,14 @@ import SnippetForm from '../components/forms/SnippetForm';
 export default function NewNote() {
     const navigate = useNavigate();
     const { id } = useParams<{ id?: string }>();
-    const noteId = id ? Number(id) : NaN;
+    const itemId = id ? Number(id) : NaN;
 
-    const isEditMode = noteId ? true : false;
+    const { pathname } = useLocation();
+    const isNoteEditRoute = pathname.includes('/note/edit/');
+    const isSnippetEditRoute = pathname.includes('/snippet/edit/');
+
+    const isEditMode =
+        !isNaN(itemId) && (isNoteEditRoute || isSnippetEditRoute);
 
     const [title, setTitle] = useState<string>('');
     const [tags, setTags] = useState<string[]>([]);
@@ -24,7 +29,11 @@ export default function NewNote() {
     const [description, setDescription] = useState<string>('');
     const [code, setCode] = useState<string>('');
 
-    const [mode, setMode] = useState<'note' | 'snippet'>('note');
+    const [mode, setMode] = useState<'note' | 'snippet'>(() => {
+        if (isNoteEditRoute) return 'note';
+        if (isSnippetEditRoute) return 'snippet';
+        return 'note';
+    });
     const isNoteMode = mode === 'note';
 
     const newNoteId = useLiveQuery<number | undefined>(() => {
@@ -36,24 +45,60 @@ export default function NewNote() {
         return db.snippets.count().then((count) => count + 1);
     }, []);
 
-    const note = useLiveQuery(async () => {
-        if (!isEditMode) return;
-        return await db.notes.get(noteId);
-    });
-
+    const dataToEdit = useLiveQuery(
+        async () => {
+            // 1. 수정 모드가 아니거나 itemId가 유효하지 않으면 쿼리하지 않음
+            if (!isEditMode || isNaN(itemId)) {
+                return undefined;
+            }
+            // 2. URL 경로에 따라 Note 또는 Snippet 데이터를 가져온다.
+            if (isNoteEditRoute) {
+                return await db.notes.get(itemId);
+            } else if (isSnippetEditRoute) {
+                return await db.snippets.get(itemId);
+            }
+            // 3. 타입이 명확하지 않은 edit 경로일 경우
+            return undefined;
+        },
+        [itemId, isEditMode, isNoteEditRoute, isSnippetEditRoute] // 의존성 배열
+    );
     useEffect(() => {
-        if (note) {
-            setTitle(note.title);
-            setTags([...note.tags]);
-            setNoteContent(note.content);
+        // 1. 새 아이템 생성 모드일 때 (폼 초기화)
+        if (!isEditMode) {
+            setTitle('');
+            setDescription('');
+            setTags([]);
+            setNoteContent('');
+            setCode('');
+            setLanguage('plaintext');
+            setMode('note'); // 새 아이템 생성 시 기본 모드는 노트
         }
-    }, [note]);
+        // 2. 수정 모드이고, 데이터를 성공적으로 가져왔을 때 (폼 채우기)
+        else if (dataToEdit) {
+            // dataToEdit이 undefined(로딩중)이 아니고, null(데이터없음)도 아닐 때
+            setTitle(dataToEdit.title);
+            setTags([...dataToEdit.tags]);
+            setMode('snippet'); // UI 모드를 스니펫으로 설정
+            console.log(dataToEdit);
 
-    useEffect(() => {
-        setTitle('');
-        setTags([]);
-        setNoteContent('');
-    }, [isEditMode]);
+            // 가져온 데이터의 타입에 따라 필드를 채움
+            if ('content' in dataToEdit) {
+                // 불러온 아이템이 Note 타입일 경우
+                setNoteContent(dataToEdit.content || '');
+                setCode('');
+                setLanguage('plaintext');
+                setMode('note'); // UI 모드를 노트로 설정
+            } else if ('code' in dataToEdit) {
+                // 불러온 아이템이 Snippet 타입일 경우
+                setCode(dataToEdit.code || '');
+                setLanguage(dataToEdit.language || 'plaintext');
+                setNoteContent('');
+                setDescription(dataToEdit.description || '');
+            }
+        }
+        // 3. 수정 모드이나 dataToEdit이 undefined/null일 때 (로딩 중이거나 데이터 없음)
+        // 이 경우는 로딩/찾을 수 없음 메시지를 띄우므로 별도의 필드 조작은 하지 않음
+    }, [isEditMode, dataToEdit, isNoteEditRoute, isSnippetEditRoute]);
 
     const handleMode = () => {
         setMode(isNoteMode ? 'snippet' : 'note');
@@ -97,7 +142,7 @@ export default function NewNote() {
                     const updatedNote = {
                         ...updatedNoteFields,
                     };
-                    await db.notes.update(noteId, updatedNote);
+                    await db.notes.update(itemId, updatedNote);
                     return;
                 }
                 if (isNoteMode) {
@@ -150,13 +195,14 @@ export default function NewNote() {
                     const updatedSnippet = {
                         ...updatedSnippetFields,
                     };
-                    await db.snippets.update(noteId, updatedSnippet);
+                    await db.snippets.update(itemId, updatedSnippet);
                     return;
                 }
                 const newSnippet: Snippet = {
                     ...snippetField,
-                    code,
+                    code: code,
                     description,
+                    language: language,
                 };
                 await db.snippets.add(newSnippet);
             } catch (err) {
@@ -176,7 +222,7 @@ export default function NewNote() {
         const confirm = window.confirm('작성을 취소하시겠습니까?');
         if (confirm) {
             if (isEditMode) {
-                navigate(`/notes/${noteId}`);
+                navigate(`/note/${itemId}`);
             } else {
                 setTitle('');
                 setTags([]);
@@ -244,8 +290,10 @@ export default function NewNote() {
                     <SnippetForm
                         language={language}
                         setLanguage={setLanguage}
-                        setDescription={setDescription}
+                        code={code}
                         setCode={setCode}
+                        description={description}
+                        setDescription={setDescription}
                     />
                 )}
             </div>

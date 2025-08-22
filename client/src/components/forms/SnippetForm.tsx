@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AceEditor from 'react-ace';
 
 // Ace 모드 & 테마 불러오기
@@ -22,20 +22,48 @@ type Version = {
 type Props = {
     language: string;
     setLanguage: (lang: string) => void;
+    code: string; // 현재 코드 값
     setCode: (code: string) => void;
+    description: string;
     setDescription: (description: string) => void;
 };
 
 export default function SnippetForm({
     language,
     setLanguage,
+    code,
     setCode,
+    description,
     setDescription,
 }: Props) {
     const [versions, setVersions] = useState<Version[]>([
         { code: '', description: '' },
     ]);
     const [currentVersion, setCurrentVersion] = useState<number>(0);
+
+    useEffect(() => {
+        // 컴포넌트 마운트 시, 또는 NewNote의 code/description이 변경될 때
+        // (즉, 수정 모드로 진입하여 기존 스니펫 데이터를 불러올 때)
+        // versions 배열이 비어있거나, 첫 버전의 코드가 현재 props.code와 다를 때만 초기화
+        if (
+            versions.length === 0 ||
+            versions[0].code !== code ||
+            versions[0].description !== description
+        ) {
+            setVersions([{ code: code, description: description }]);
+            setCurrentVersion(0);
+        }
+    }, [code, description]);
+
+    // ✨✨✨ 문제 해결의 핵심! useEffect로 부모 상태 업데이트 분리 ✨✨✨
+    // 이펙트 2: SnippetForm 내부의 버전이 변경될 때 부모(NewNote)의 code/description 상태를 업데이트
+    useEffect(() => {
+        // versions 배열과 currentVersion이 변경될 때마다 부모의 상태를 업데이트
+        if (versions.length > 0) {
+            setCode(versions[currentVersion].code);
+            setDescription(versions[currentVersion].description);
+        }
+    }, [versions, currentVersion, setCode, setDescription]);
 
     const updateCurrentVersion = (
         field: 'code' | 'description',
@@ -53,9 +81,6 @@ export default function SnippetForm({
         setVersions([...versions, { code: '', description: '' }]);
         setCurrentVersion(versions.length);
     };
-
-    setCode(versions[0].code);
-    setDescription(versions[0].description);
 
     return (
         <div className={styles.snippetForm}>
