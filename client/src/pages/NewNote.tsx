@@ -120,7 +120,7 @@ export default function NewNote() {
                             .map((tag) => tag.trim())
                             .filter((tag) => tag !== '')
                     ),
-                ],
+                ], // contents 없는 이유
                 createdAt: timestamp,
                 updatedAt: timestamp,
             };
@@ -174,7 +174,7 @@ export default function NewNote() {
                     ),
                 ],
                 language: language,
-                description: description,
+                description: description, // code 없는 이유
                 createdAt: timestamp,
                 updatedAt: timestamp,
             };
@@ -187,7 +187,9 @@ export default function NewNote() {
                             .filter((tag) => tag !== '')
                     ),
                 ],
+                language: language,
                 code: code,
+                description: description,
                 updatedAt: timestamp,
             };
             try {
@@ -201,7 +203,7 @@ export default function NewNote() {
                 const newSnippet: Snippet = {
                     ...snippetField,
                     code: code,
-                    description,
+                    description: description,
                     language: language,
                 };
                 await db.snippets.add(newSnippet);

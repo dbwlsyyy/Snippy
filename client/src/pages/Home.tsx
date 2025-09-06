@@ -15,11 +15,21 @@ export default function Home() {
                 보세요!
             </p>
             <div className={styles.exampleCard}>
-                <h3 className={styles.cardTitle}>첫 번째 노트 작성 팁!</h3>
+                <h3 className={styles.cardTitle}>첫 번째, 노트 작성하기</h3>
                 <p className={styles.cardContent}>
                     시작이 반입니다. 오늘 배운 새로운 개념이나 코드 조각을 바로
                     기록해보세요! Markdown 문법을 사용해서 코드 블록이나 목록을
                     깔끔하게 정리할 수 있습니다.
+                </p>
+            </div>
+
+            <div className={styles.exampleCard}>
+                <h3 className={styles.cardTitle}>두 번째, 스니펫 작성하기</h3>
+                <p className={styles.cardContent}>
+                    스니펫 모드에서 코드 조각만 따로 기록해보세요! 각 스니펫은
+                    버전 별로 기록이 가능합니다. 코드를 디벨롭하는 과정을
+                    기록해보세요. 간단한 설명과 함께 코드를 언제든 리뷰할 수
+                    있습니다.
                 </p>
             </div>
         </div>

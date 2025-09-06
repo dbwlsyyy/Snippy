@@ -85,6 +85,7 @@ export default function SnippetForm({
     return (
         <div className={styles.snippetForm}>
             <div className={styles.snippetArea}>
+                {/* 코드 에디터 */}
                 <div className={styles.editorWrapper}>
                     <AceEditor
                         mode={language}
@@ -107,39 +108,52 @@ export default function SnippetForm({
                         }}
                     />
                 </div>
-                <div className={styles.field}>
-                    <select
-                        value={language}
-                        onChange={(e) => setLanguage(e.target.value)}
-                        className={styles.select}
-                    >
-                        <option value="javascript">JavaScript</option>
-                        <option value="typescript">TypeScript</option>
-                        <option value="jsx">JSX</option>
-                        <option value="tsx">TSX</option>
-                        <option value="xml">HTML</option>
-                        <option value="css">CSS</option>
-                        <option value="json">JSON</option>
-                    </select>
-                </div>
 
-                <div className={styles.versionBar}>
-                    {versions.map((_, i) => (
-                        <button
-                            key={i}
-                            className={`${styles.versionBtn} ${
-                                i === currentVersion ? styles.active : ''
-                            }`}
-                            onClick={() => setCurrentVersion(i)}
+                {/* 오른쪽 패널 */}
+                <div className={styles.sidePanel}>
+                    <div className={styles.field}>
+                        <select
+                            value={language}
+                            onChange={(e) => setLanguage(e.target.value)}
+                            className={styles.select}
                         >
-                            V{i + 1}
+                            <option value="javascript">JavaScript</option>
+                            <option value="typescript">TypeScript</option>
+                            <option value="jsx">JSX</option>
+                            <option value="tsx">TSX</option>
+                            <option value="xml">HTML</option>
+                            <option value="css">CSS</option>
+                            <option value="json">JSON</option>
+                        </select>
+                    </div>
+
+                    <div className={styles.versionPanel}>
+                        <div className={styles.versionList}>
+                            {versions.map((_, i) => (
+                                <button
+                                    key={i}
+                                    className={`${styles.versionBtn} ${
+                                        i === currentVersion
+                                            ? styles.active
+                                            : ''
+                                    }`}
+                                    onClick={() => setCurrentVersion(i)}
+                                >
+                                    V{i + 1}
+                                </button>
+                            ))}
+                        </div>
+                        <button
+                            className={styles.addBtn}
+                            onClick={addNewVersion}
+                        >
+                            + 새 버전
                         </button>
-                    ))}
-                    <button className={styles.addBtn} onClick={addNewVersion}>
-                        + 새 버전
-                    </button>
+                    </div>
                 </div>
             </div>
+
+            {/* 설명 */}
             <div className={styles.field}>
                 <textarea
                     className={styles.textarea}
