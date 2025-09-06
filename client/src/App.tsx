@@ -1,7 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 import styles from './App.module.css';
-import Header from './components/Header';
-import SideBar from './components/SideBar';
+import Header from './components/common/Header';
+import SideBar from './components/common/SideBar';
 import AppRoutes from './routes/AppRoutes';
 import { useState } from 'react';
 
