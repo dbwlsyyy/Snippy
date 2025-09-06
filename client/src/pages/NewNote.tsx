@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styles from './NewNote.module.css';
 import type { Note, Snippet } from '../models/Note';
 import { db } from '../api/db';
@@ -7,6 +7,7 @@ import BtnCRUD from '../components/common/BtnCRUD';
 import { useLiveQuery } from 'dexie-react-hooks';
 import NoteForm from '../components/forms/NoteForm';
 import SnippetForm from '../components/forms/SnippetForm';
+import useNoteForm from '../hooks/useNoteForm';
 
 export default function NewNote() {
     const navigate = useNavigate();
@@ -17,24 +18,26 @@ export default function NewNote() {
     const isNoteEditRoute = pathname.includes('/note/edit/');
     const isSnippetEditRoute = pathname.includes('/snippet/edit/');
 
+    const {
+        title,
+        setTitle,
+        tags,
+        setTags,
+        noteContent,
+        setNoteContent,
+        language,
+        setLanguage,
+        description,
+        setDescription,
+        code,
+        setCode,
+        mode,
+        setMode,
+        isNoteMode,
+        resetForm,
+    } = useNoteForm(isNoteEditRoute ? 'note' : 'snippet');
     const isEditMode =
         !isNaN(itemId) && (isNoteEditRoute || isSnippetEditRoute);
-
-    const [title, setTitle] = useState<string>('');
-    const [tags, setTags] = useState<string[]>([]);
-
-    const [noteContent, setNoteContent] = useState<string>('');
-
-    const [language, setLanguage] = useState<string>('javascript');
-    const [description, setDescription] = useState<string>('');
-    const [code, setCode] = useState<string>('');
-
-    const [mode, setMode] = useState<'note' | 'snippet'>(() => {
-        if (isNoteEditRoute) return 'note';
-        if (isSnippetEditRoute) return 'snippet';
-        return 'note';
-    });
-    const isNoteMode = mode === 'note';
 
     const newNoteId = useLiveQuery<number | undefined>(() => {
         if (isEditMode) return undefined;
@@ -65,13 +68,7 @@ export default function NewNote() {
     useEffect(() => {
         // 1. 새 아이템 생성 모드일 때 (폼 초기화)
         if (!isEditMode) {
-            setTitle('');
-            setDescription('');
-            setTags([]);
-            setNoteContent('');
-            setCode('');
-            setLanguage('plaintext');
-            setMode('note'); // 새 아이템 생성 시 기본 모드는 노트
+            resetForm(); // 새 아이템 생성 시 기본 모드는 노트
         }
         // 2. 수정 모드이고, 데이터를 성공적으로 가져왔을 때 (폼 채우기)
         else if (dataToEdit) {
@@ -239,21 +236,30 @@ export default function NewNote() {
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.headerTop}>
-                    <h2 className={styles.headerNumber}>
-                        {isEditMode
-                            ? ''
-                            : isNoteMode
-                            ? `# ${newNoteId}`
-                            : `# ${newSnippetId}`}
-                    </h2>
+                    {isEditMode ? (
+                        <span className={styles.editMsg}>수정 중 ...</span>
+                    ) : (
+                        <h2 className={styles.headerNumber}>
+                            {isNoteMode
+                                ? `# ${newNoteId}`
+                                : `# ${newSnippetId}`}
+                        </h2>
+                    )}
                     <div className={styles.headerbtn}>
                         <BtnCRUD type="저장" onClick={handleSave} />
                         <BtnCRUD type="취소" onClick={handleCancel} />
-                        <button onClick={handleMode} className={styles.btnMode}>
-                            {isNoteMode
-                                ? '스니펫 모드로 전환'
-                                : '노트 모드로 전환'}
-                        </button>
+                        {isEditMode ? (
+                            ''
+                        ) : (
+                            <button
+                                onClick={handleMode}
+                                className={styles.btnMode}
+                            >
+                                {isNoteMode
+                                    ? '스니펫 모드로 전환'
+                                    : '노트 모드로 전환'}
+                            </button>
+                        )}
                     </div>
                 </div>
 
