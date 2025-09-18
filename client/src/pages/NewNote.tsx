@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import styles from './NewNote.module.css';
-import type { Note, Snippet } from '../models/Note';
 import { db } from '../api/db';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import BtnCRUD from '../components/common/BtnCRUD';
@@ -8,6 +7,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import NoteForm from '../components/forms/NoteForm';
 import SnippetForm from '../components/forms/SnippetForm';
 import useNoteForm from '../hooks/useNoteForm';
+import { saveNote, saveSnippet } from '../services/dbServices';
 
 export default function NewNote() {
     const navigate = useNavigate();
@@ -36,6 +36,7 @@ export default function NewNote() {
         isNoteMode,
         resetForm,
     } = useNoteForm(isNoteEditRoute ? 'note' : 'snippet');
+
     const isEditMode =
         !isNaN(itemId) && (isNoteEditRoute || isSnippetEditRoute);
 
@@ -107,129 +108,49 @@ export default function NewNote() {
             return;
         }
 
-        if (isNoteMode) {
-            const timestamp = Date.now();
-            const noteFields = {
-                title: title.trim(),
-                tags: [
-                    ...new Set( // new Set()으로 중복값 허용하지 않음
-                        tags
-                            .map((tag) => tag.trim())
-                            .filter((tag) => tag !== '')
-                    ),
-                ], // contents 없는 이유
-                createdAt: timestamp,
-                updatedAt: timestamp,
-            };
-            const updatedNoteFields = {
-                title: title.trim(),
-                tags: [
-                    ...new Set(
-                        tags
-                            .map((tag) => tag.trim())
-                            .filter((tag) => tag !== '')
-                    ),
-                ],
-                content: noteContent,
-                updatedAt: timestamp,
-            };
-
-            try {
-                if (isEditMode) {
-                    const updatedNote = {
-                        ...updatedNoteFields,
-                    };
-                    await db.notes.update(itemId, updatedNote);
-                    return;
-                }
-                if (isNoteMode) {
-                    const newNote: Note = {
-                        ...noteFields,
-                        content: noteContent,
-                    };
-                    await db.notes.add(newNote);
-                }
-            } catch (err) {
-                console.error('DB 저장 실패:', err);
-                alert(
-                    `저장 실패: ${
-                        err instanceof Error ? err.message : String(err)
-                    }`
-                );
-            } finally {
+        try {
+            if (isNoteMode) {
+                await saveNote({
+                    id: itemId,
+                    title,
+                    tags,
+                    content: noteContent,
+                    isEditMode,
+                });
                 navigate('/notes');
-            }
-        } else {
-            const timestamp = Date.now();
-            const snippetField = {
-                title: title.trim(),
-                tags: [
-                    ...new Set(
-                        tags
-                            .map((tag) => tag.trim())
-                            .filter((tag) => tag !== '')
-                    ),
-                ],
-                language: language,
-                description: description, // code 없는 이유
-                createdAt: timestamp,
-                updatedAt: timestamp,
-            };
-            const updatedSnippetFields = {
-                title: title.trim(),
-                tags: [
-                    ...new Set(
-                        tags
-                            .map((tag) => tag.trim())
-                            .filter((tag) => tag !== '')
-                    ),
-                ],
-                language: language,
-                code: code,
-                description: description,
-                updatedAt: timestamp,
-            };
-            try {
-                if (isEditMode) {
-                    const updatedSnippet = {
-                        ...updatedSnippetFields,
-                    };
-                    await db.snippets.update(itemId, updatedSnippet);
-                    return;
-                }
-                const newSnippet: Snippet = {
-                    ...snippetField,
-                    code: code,
-                    description: description,
-                    language: language,
-                };
-                await db.snippets.add(newSnippet);
-            } catch (err) {
-                console.error('DB 저장 실패:', err);
-                alert(
-                    `저장 실패: ${
-                        err instanceof Error ? err.message : String(err)
-                    }`
-                );
-            } finally {
+            } else {
+                await saveSnippet({
+                    id: itemId,
+                    title,
+                    tags,
+                    code,
+                    language,
+                    description,
+                    isEditMode,
+                });
                 navigate('/snippets');
             }
+        } catch (err) {
+            console.error('DB 저장 실패:', err);
+            alert(
+                `저장 실패: ${err instanceof Error ? err.message : String(err)}`
+            );
         }
     };
 
     const handleCancel = () => {
-        const confirm = window.confirm('작성을 취소하시겠습니까?');
-        if (confirm) {
+        if (window.confirm('작성을 취소하시겠습니까?')) {
             if (isEditMode) {
-                navigate(`/note/${itemId}`);
+                navigate(isNoteMode ? `/note/${itemId}` : `/snippet/${itemId}`);
             } else {
                 setTitle('');
                 setTags([]);
                 setNoteContent('');
+                setCode(''); //추가
+                setDescription(''); //추가
                 navigate('/');
             }
         }
-        return;
     };
 
     return (
